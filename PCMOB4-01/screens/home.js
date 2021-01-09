@@ -5,11 +5,18 @@ import { Ionicons } from '@expo/vector-icons';
 import * as SQLite from "expo-sqlite";
 import * as FileSystem from "expo-file-system";
 
+import firebase from "../database/firebaseDB"
+
 const db = SQLite.openDatabase("notes.db");
 console.log(FileSystem.documentDirectory);
 
+
 export default function homeScreen( {navigation, route} )
 {
+  firebase.firestore().collection("todos").add
+  ({
+    testing: "Hello"
+  })
 
   const [notes, setNotes] = useState([]);
 
