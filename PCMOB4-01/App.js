@@ -1,94 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import home from "./screens/home";
+import busInfo from "./screens/busInfo";
+import busNo from "./screens/busNo";
+import busStopNo from "./screens/busStopNo";
 
 export default function App() {
 
-  const [arrival,setArrival] = useState([]);
-  const [busNo,setBusNo] = useState(0);
-
-
-  const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=83139"
-
-  function resetBusStopData()
-  {
-    setArrival("");
-    loadBusStopData();
-  }
-
-  function loadBusStopData()
-  {
-    fetch(BUSSTOP_URL)
-      .then((response) =>
-      {
-        return response.json();
-      })
-      .then((responseData) =>
-      {
-        const myBus = responseData.services.filter
-        ((item) => item.no === "155")[0];
-
-        let newArrival =
-        {
-          arrivalTime: myBus.next.time,
-          arrivalSeconds: myBus.next.duration_ms
-        }
-
-        setArrival
-        ([
-          ... arrival,newArrival
-        ])
-
-        console.log(myBus.next.duration_ms)
-        setBusNo(myBus.no)
-      })
-  }
-
-  useEffect(() => {
-    // const interval = setInterval(loadBusStopData,1000);
-    // return() => clearInterval(interval);
-  },[])
+  const stack = createStackNavigator();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.textHeader}>{busNo}</Text>
-      <Text style={styles.textHeader}>Bus Arrival Time</Text>
-      <Text style={styles.textSubheader}>{arrival === [] ? <ActivityIndicator size="small"/> : arrival[0]}</Text>
-      <TouchableOpacity style={styles.button} onPress = {resetBusStopData}>
-        <Text style={styles.buttonText}>Refresh</Text>
-      </TouchableOpacity>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+        <stack.Navigator headerMode="none" mode="modal">
+          <stack.Screen name = "home" component = {home}/>
+          <stack.Screen name = "busInfo" component = {busInfo}/>
+          <stack.Screen name = "busNo" component = {busNo}/>
+          <stack.Screen name = "busStopNo" component = {busStopNo}/>
+        </stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  textHeader: {
-    fontSize: 20,
-    marginBottom:10
-  },
-
-  textSubheader: {
-    fontSize: 15,
-    marginBottom: 20
-  },
-
-  button: {
-    backgroundColor: "#ebfaff",
-    borderRadius: 5
-  },
-
-  buttonText: {
-    padding: 10,
-    fontWeight: "600",
-    color: "#333333"
-  },
-
-});
