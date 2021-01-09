@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'rea
 export default function App({navigation, route}) {
 
   const [arrival,setArrival] = useState(null);
+  const [arrival2,setArrival2] = useState(null);
 
   const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=" + route.params.busStopID
 
@@ -24,6 +25,7 @@ export default function App({navigation, route}) {
   function loadBusStopData()
   { 
     setArrival (null);
+    setArrival2 (null);
 
     fetch(BUSSTOP_URL)
       .then((response) => response.json())
@@ -35,11 +37,12 @@ export default function App({navigation, route}) {
         { 
             let newArrival =
             {
-              arrivalTime: "Bus is unavailable",
+              arrivalTime: "",
               arrivalDuration: "Bus is unavailable"
             }
 
             setArrival ([newArrival])
+            setArrival2 ([newArrival])
         }
         
         else
@@ -48,7 +51,7 @@ export default function App({navigation, route}) {
             {   
                 let newArrival =
                 {
-                    arrivalTime: "Arrived",
+                    arrivalTime: "",
                     arrivalDuration: "Arrived"
                 }
 
@@ -59,11 +62,49 @@ export default function App({navigation, route}) {
             {   
                 let newArrival =
                 {
-                    arrivalTime: myBus.next.time,
-                    arrivalDuration: String(Math.floor(myBus.next.duration_ms/60000)) + " minutes " + String(Math.floor((myBus.next.duration_ms/1000)%60)) + " seconds"
+                    arrivalTime: (new Date(myBus.next.time)).toLocaleTimeString(),
+                    arrivalDuration: String(Math.floor(myBus.next.duration_ms/60000)) + " min " + String(Math.floor((myBus.next.duration_ms/1000)%60)) + " sec"
                 }
 
                 setArrival ([newArrival])
+
+                // In the case of last bus
+
+                if (myBus.next2.duration_ms === null)
+                {   
+                    let newArrival2 =
+                    {
+                        arrivalTime: "",
+                        arrivalDuration: "Bus is unavailable"
+                    }
+
+                    setArrival2 ([newArrival2])
+                }
+            }
+
+            if (arrival2 === null)
+            {
+              if (myBus.next2.duration_ms === null && arrival2 === null)
+              {   
+                  let newArrival2 =
+                  {
+                      arrivalTime: "",
+                      arrivalDuration: "Arrived"
+                  }
+
+                  setArrival2 ([newArrival2])
+              }
+
+              else
+              {   
+                  let newArrival2 =
+                  {
+                      arrivalTime: (new Date(myBus.next2.time)).toLocaleTimeString(),
+                      arrivalDuration: String(Math.floor(myBus.next2.duration_ms/60000)) + " min " + String(Math.floor((myBus.next2.duration_ms/1000)%60)) + " sec"
+                  }
+
+                  setArrival2 ([newArrival2])
+              }
             }
 
         }
@@ -86,12 +127,19 @@ export default function App({navigation, route}) {
   return (
     <View style={styles.container}>
       <Text style={styles.textHeader}>{route.params.bus}</Text>
-      <Text style={styles.textHeader}>Bus Arrival Time</Text>
-      <Text style={styles.textSubheader}>{arrival === null? <ActivityIndicator size="small"/> : arrival[0]["arrivalDuration"]}</Text>
+      <Text style={styles.textHeader2}>Bus Arrival Time</Text>
+      <View style={styles.innerContainer}>
+        <Text style={styles.textSubheaderStrong}>{arrival === null? null : arrival[0]["arrivalTime"] }</Text>
+        <Text style={styles.textSubheader}>{arrival === null? <ActivityIndicator size="small"/> : arrival[0]["arrivalDuration"]}</Text>
+      </View>
+      <View style={styles.innerContainer}>
+        <Text style={styles.textSubheader2Strong}>{arrival2 === null? null : arrival2[0]["arrivalTime"] }</Text>
+        <Text style={styles.textSubheader2}>{arrival2 === null? <ActivityIndicator size="small"/> : arrival2[0]["arrivalDuration"]}</Text>
+      </View>
       <TouchableOpacity style={styles.button} onPress = {loadBusStopData}>
             <Text style={styles.buttonText}>Refresh</Text>
       </TouchableOpacity>
-      <View style={styles.innerContainer}>
+      <View style={styles.innerContainer2}>
             <TouchableOpacity style={styles.button2} onPress = {() => busNoScreen(route.params.bus)}>
                 <Text style={styles.buttonText}>Bus No.</Text>
             </TouchableOpacity>
@@ -114,18 +162,37 @@ const styles = StyleSheet.create({
 
   textHeader: {
     fontSize: 20,
-    marginBottom:10
+    marginBottom: 35
+  },
+
+  textHeader2: {
+    fontSize: 20,
+    marginBottom: 15,
+    fontWeight: "600"
   },
 
   textSubheader: {
+    fontSize: 15
+  },
+
+  textSubheaderStrong: {
     fontSize: 15,
-    marginBottom: 20,
-    marginTop: 5
+    fontWeight: "600"
+  },
+
+  textSubheader2: {
+    fontSize: 12,
+  },
+
+  textSubheader2Strong: {
+    fontSize: 12,
+    fontWeight: "600"
   },
 
   button: {
     backgroundColor: "#ebfaff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 20
   },
 
   buttonText: {
@@ -135,6 +202,14 @@ const styles = StyleSheet.create({
   },
 
   innerContainer: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: "auto",
+    marginBottom: 15
+  },
+
+  innerContainer2: {
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
