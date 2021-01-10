@@ -1,21 +1,17 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import AddScreen from "./screens/AddScreen";
+import NotesStack from "./screens/NotesStack";
 
-import notesStack from "./screens/notesStack";
-import modalScreen from "./screens/modalScreen";
-  
-
+const Stack = createStackNavigator();
 export default function App() {
-
-  const stack = createStackNavigator();
-
   return (
     <NavigationContainer>
-        <stack.Navigator headerMode="none" mode="modal">
-          <stack.Screen name = "notesStack" component = {notesStack}/>
-          <stack.Screen name = "modalScreen" component = {modalScreen}/>
-        </stack.Navigator>
+      <Stack.Navigator headerMode="none" mode="modal">
+        <Stack.Screen name="Notes Stack" component={NotesStack} />
+        <Stack.Screen name="Add Screen" component={AddScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

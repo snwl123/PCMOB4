@@ -1,20 +1,28 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import NotesScreen from "./NotesScreen";
 
-import homeScreen from "./home";
-
-
-
-export default function notesStack()
-{
-  const innerStack = createStackNavigator();
-
+const InnerStack = createStackNavigator();
+export default function NotesStack() {
   return (
-    <innerStack.Navigator>
-      <innerStack.Screen
-        name="To Do"
-        component={homeScreen}
+    <InnerStack.Navigator>
+      <InnerStack.Screen
+        name="Notes"
+        component={NotesScreen}
+        options={{
+          title: "To-Do App",
+          headerStyle: {
+            height: 100,
+            shadowColor: "black",
+            shadowOpacity: 0.2,
+            shadowRadius: 5,
+          },
+          headerTintColor: "#111",
+          headerTitleStyle: {
+            fontSize: 20
+          },
+        }}
       />
-    </innerStack.Navigator>
+    </InnerStack.Navigator>
   );
 }
