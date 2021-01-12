@@ -19,6 +19,7 @@ Before app deployment:
 	![Demo photo](https://github.com/snwl123/PCMOB4/blob/master/PCMOB4-01/assets/README_assets/README_03.PNG)
 
 
-5. ![Demo photo](https://github.com/snwl123/PCMOB4/blob/master/PCMOB4-01/assets/README_assets/README_04.png)
+5. 
+	![Demo photo](https://github.com/snwl123/PCMOB4/blob/master/PCMOB4-01/assets/README_assets/README_04.png)
 
 
