@@ -67,45 +67,31 @@ export default function App({navigation, route}) {
                 }
 
                 setArrival ([newArrival])
+            }
 
-                // In the case of last bus
 
-                if (myBus.next2.duration_ms === null)
-                {   
-                    let newArrival2 =
-                    {
-                        arrivalTime: "",
-                        arrivalDuration: "Bus is unavailable"
-                    }
-
-                    setArrival2 ([newArrival2])
+            if (myBus.next2.duration_ms === null)
+            {   
+                let newArrival2 =
+                {
+                    arrivalTime: "",
+                    arrivalDuration: "Arrived"
                 }
+
+                setArrival2 ([newArrival2])
             }
 
-            if (arrival2 === null)
-            {
-              if (myBus.next2.duration_ms === null && arrival2 === null)
-              {   
-                  let newArrival2 =
-                  {
-                      arrivalTime: "",
-                      arrivalDuration: "Arrived"
-                  }
+            else
+            {   
+                let newArrival2 =
+                {
+                    arrivalTime: (new Date(myBus.next2.time)).toLocaleTimeString(),
+                    arrivalDuration: String(Math.floor(myBus.next2.duration_ms/60000)) + " min " + String(Math.floor((myBus.next2.duration_ms/1000)%60)) + " sec"
+                }
 
-                  setArrival2 ([newArrival2])
-              }
-
-              else
-              {   
-                  let newArrival2 =
-                  {
-                      arrivalTime: (new Date(myBus.next2.time)).toLocaleTimeString(),
-                      arrivalDuration: String(Math.floor(myBus.next2.duration_ms/60000)) + " min " + String(Math.floor((myBus.next2.duration_ms/1000)%60)) + " sec"
-                  }
-
-                  setArrival2 ([newArrival2])
-              }
+                setArrival2 ([newArrival2])
             }
+    
 
         }
 
